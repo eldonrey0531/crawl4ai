@@ -21,8 +21,8 @@ import asyncio
 import uuid
 
 from urllib.parse import urlparse
-import random
 from abc import ABC, abstractmethod
+import secrets
 
 
 class RateLimiter:
@@ -58,7 +58,7 @@ class RateLimiter:
 
         # Random delay within base range if no current delay
         if state.current_delay == 0:
-            state.current_delay = random.uniform(*self.base_delay)
+            state.current_delay = secrets.SystemRandom().uniform(*self.base_delay)
 
         state.last_request_time = time.time()
 
@@ -73,12 +73,12 @@ class RateLimiter:
 
             # Exponential backoff with random jitter
             state.current_delay = min(
-                state.current_delay * 2 * random.uniform(0.75, 1.25), self.max_delay
+                state.current_delay * 2 * secrets.SystemRandom().uniform(0.75, 1.25), self.max_delay
             )
         else:
             # Gradually reduce delay on success
             state.current_delay = max(
-                random.uniform(*self.base_delay), state.current_delay * 0.75
+                secrets.SystemRandom().uniform(*self.base_delay), state.current_delay * 0.75
             )
             state.fail_count = 0
 

@@ -28,9 +28,9 @@ import asyncio
 import os
 import json
 import re
-import random
 from typing import Optional, Dict
 from dotenv import load_dotenv
+import secrets
 
 load_dotenv()
 
@@ -288,7 +288,7 @@ async def demo_proxy_rotation():
         try:
             proxies = os.getenv("PROXIES", "").split(",")
                 
-            ip, port, username, password = random.choice(proxies).split(":")
+            ip, port, username, password = secrets.choice(proxies).split(":")
             return {
                 "server": f"http://{ip}:{port}",
                 "username": username,
