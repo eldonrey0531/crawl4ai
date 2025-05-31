@@ -5,10 +5,10 @@ import re
 from abc import ABC, abstractmethod
 import random
 from fake_useragent import UserAgent
-import requests
 from lxml import html
 import json
 from typing import Optional, List, Union, Dict
+from security import safe_requests
 
 class UAGen(ABC):
    @abstractmethod
@@ -94,7 +94,7 @@ class OnlineUAGenerator(UAGen):
        
    def _fetch_agents(self):
        try:
-           response = requests.get(
+           response = safe_requests.get(
                'https://www.useragents.me/',
                timeout=5,
                headers={'Accept': 'text/html,application/xhtml+xml'}
