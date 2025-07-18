@@ -22,8 +22,8 @@ class Crawl4AiTester:
     ) -> Dict[str, Any]:
         # Submit crawl job
         response = requests.post(
-            f"{self.base_url}/crawl", json=request_data, headers=self.headers
-        )
+            f"{self.base_url}/crawl", json=request_data, headers=self.headers, 
+        timeout=60)
         if response.status_code == 403:
             raise Exception("API token is invalid or missing")
         task_id = response.json()["task_id"]
@@ -38,8 +38,8 @@ class Crawl4AiTester:
                 )
 
             result = requests.get(
-                f"{self.base_url}/task/{task_id}", headers=self.headers
-            )
+                f"{self.base_url}/task/{task_id}", headers=self.headers, 
+            timeout=60)
             status = result.json()
 
             if status["status"] == "failed":
@@ -66,8 +66,8 @@ class Crawl4AiTester:
     def crawl_direct(self, request_data: Dict[str, Any]) -> Dict[str, Any]:
         """Directly crawl without using task queue"""
         response = requests.post(
-            f"{self.base_url}/crawl_direct", json=request_data, headers=self.headers
-        )
+            f"{self.base_url}/crawl_direct", json=request_data, headers=self.headers, 
+        timeout=60)
         response.raise_for_status()
         return response.json()
 
