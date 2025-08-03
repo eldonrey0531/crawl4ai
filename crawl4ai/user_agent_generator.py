@@ -1,14 +1,13 @@
-import random
 from typing import Optional, Literal, List, Dict, Tuple
 import re
 
 from abc import ABC, abstractmethod
-import random
 from fake_useragent import UserAgent
 import requests
 from lxml import html
 import json
 from typing import Optional, List, Union, Dict
+import secrets
 
 class UAGen(ABC):
    @abstractmethod
@@ -278,20 +277,20 @@ class UserAgentGenerator():
         if num_browsers not in self.browser_combinations:
             raise ValueError(f"Unsupported number of browsers: {num_browsers}")
 
-        combination = random.choice(self.browser_combinations[num_browsers])
+        combination = secrets.choice(self.browser_combinations[num_browsers])
         browser_stack = []
 
         for browser in combination:
             if browser == "chrome":
-                browser_stack.append(random.choice(self.chrome_versions))
+                browser_stack.append(secrets.choice(self.chrome_versions))
             elif browser == "firefox":
-                browser_stack.append(random.choice(self.firefox_versions))
+                browser_stack.append(secrets.choice(self.firefox_versions))
             elif browser == "safari":
-                browser_stack.append(random.choice(self.safari_versions))
+                browser_stack.append(secrets.choice(self.safari_versions))
             elif browser == "edge":
-                browser_stack.append(random.choice(self.edge_versions))
+                browser_stack.append(secrets.choice(self.edge_versions))
             elif browser == "gecko":
-                browser_stack.append(random.choice(self.rendering_engines["gecko"]))
+                browser_stack.append(secrets.choice(self.rendering_engines["gecko"]))
             elif browser == "webkit":
                 browser_stack.append(self.rendering_engines["chrome_webkit"])
 
@@ -326,7 +325,7 @@ class UserAgentGenerator():
 
         # Add appropriate legacy token based on browser stack
         if "Firefox" in str(browser_stack) or browser_type == "firefox":
-            components.append(random.choice(self.rendering_engines["gecko"]))
+            components.append(secrets.choice(self.rendering_engines["gecko"]))
         elif "Chrome" in str(browser_stack) or "Safari" in str(browser_stack) or browser_type == "chrome":
             components.append(self.rendering_engines["chrome_webkit"])
             components.append("(KHTML, like Gecko)")
@@ -364,10 +363,10 @@ class UserAgentGenerator():
                     platforms = {os_type: platform_group[os_type]}
                     break
 
-        os_key = random.choice(list(platforms.keys()))
+        os_key = secrets.choice(list(platforms.keys()))
         if device_brand and device_brand in platforms[os_key]:
             return platforms[os_key][device_brand]
-        return random.choice(list(platforms[os_key].values()))
+        return secrets.choice(list(platforms[os_key].values()))
 
     def parse_user_agent(self, user_agent: str) -> Dict[str, str]:
         """Parse a user agent string to extract browser and version information"""
